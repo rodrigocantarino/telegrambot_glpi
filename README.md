@@ -21,12 +21,12 @@
 ```
 Commands List:
 
-/help - Show bot commands help
-/newfollowup - Add a new followup to a ticket on GLPI via TelegramBot
-/newticket - Add a new ticket on GLPI via TelegramBot
-/searchticket - Search for a ticket on GLPI via TelegramBot
+/help - Show bot commands help.
 /login - Login via Telegrambot for GLPI. The login command will only work on private chat. 
 Group chat Login Command is forbidden.
+/newfollowup - Add a new followup to a ticket on GLPI via TelegramBot.
+/newticket - Add a new ticket on GLPI via TelegramBot.
+/searchticket - Search for a ticket on GLPI via TelegramBot.
 
 For exact command help type: /help <command>
 ```
@@ -127,7 +127,7 @@ Here is a step by step of the video above:
   - After the installation click on the Enable icon.
   - If your plugin installation didn't work, we have to make some workarounds:
   ```
-  Here we have to make some changes on GLPI 9.4.x core to Telegrambot work properly:
+  Unfortunately we have to make some changes on GLPI 9.4.x core to Telegrambot work properly:
   Attention: If all your Plugins folder name starts with lowercase letter, this modification has no impact at all on your GLPI Aplication.
   Go to file: /glpi/inc/plugin.class.php
   Plugin::load() line 161 code added: $name = strtolower($name);
