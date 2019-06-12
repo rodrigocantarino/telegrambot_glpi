@@ -11,11 +11,11 @@
 
 ## Updates Roadmap version 3.0
 
- - [✔] New Ticket.
- - [✔] Search ticket.
- - [✔] New followup.
- - [✔] Support group notification.
- - [✔] Login.
+ - [x] New Ticket.
+ - [x] Search ticket.
+ - [x] New followup.
+ - [x] Support group notification.
+ - [x] Login.
 
 ## New TelegramBot Commands:
 ```
@@ -70,49 +70,37 @@ Here is a step by step of the video above:
   - Start a new chat with it.
   - Type /newbot and send.
   - BotFather will reply:
-    ```
-    Alright, a new bot. How are we going to call it? Please choose a name for your bot.
-    ```
+    > Alright, a new bot. How are we going to call it? Please choose a name for your bot.
   - Type the name of your bot and send. Ex.: GLPI Telegrambot Demo.
   - BotFather will reply again:
-    ```
-    Good. Now let's choose a username for your bot. It must end in `bot`. Like this, for example: TetrisBot or tetris_bot.
-    ```
+    > Good. Now let's choose a username for your bot. It must end in `bot`. Like this, for example: TetrisBot or tetris_bot.
   - Type the username of your bot and send. Ex.: glpi_telegrambot_demo_bot.
   - Finally BotFather replies with:
-    ```
-    Done! Congratulations on your new bot. You will find it at t.me/glpi_telegrambot_demo_bot. 
-    You can now add a description, about section and profile picture for your bot, see /help for a 
-    list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support 
-    if you want a better username for it. Just make sure the bot is fully operational before you do this.
-
-    Use this token to access the HTTP API:
-    872970295:AAFsALgD0WH9BOp-ZU282JVN_lW3l56GZEA
-    Keep your token secure and store it safely, it can be used by anyone to control your bot.
-
-    For a description of the Bot API, see this page: https://core.telegram.org/bots/api
-    ```
+    > Done! Congratulations on your new bot. You will find it at t.me/glpi_telegrambot_demo_bot. 
+    > You can now add a description, about section and profile picture for your bot, see /help for a 
+    > list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support 
+    > if you want a better username for it. Just make sure the bot is fully operational before you do this.
+    > 
+    > Use this token to access the HTTP API:
+    > 872970295:AAFsALgD0WH9BOp-ZU282JVN_lW3l56GZEA
+    > Keep your token secure and store it safely, it can be used by anyone to control your bot.
+    > 
+    > For a description of the Bot API, see this page: https://core.telegram.org/bots/api
   - Save the token to access and the bot username to use it late.
 
 - Config your bot to group messages:
   - Now type /setprivacy to BotFather. This command can be executed any time.
   - BotFather replies with:
-    ```
-    Choose a bot to change group messages settings.
-    ```
+    > Choose a bot to change group messages settings.
   - Type (or select) @<your_bot_username> 
     (change to the username you set at step 5 above, but start it with @) Ex.: glpi_telegrambot_demo_bot.
   - BotFather replies with:
-    ```
-    'Enable' - your bot will only receive messages that either start with the '/' symbol or mention the bot by username.
-    'Disable' - your bot will receive all messages that people send to groups.
-    Current status is: ENABLED
-    ```
+    > 'Enable' - your bot will only receive messages that either start with the '/' symbol or mention the bot by username.
+    > 'Disable' - your bot will receive all messages that people send to groups.
+    > Current status is: ENABLED
   - Type (or select) Disable to let your bot receive all messages sent to a group. This step is up to you actually.
   - BotFather replies with:
-    ```
-    Success! The new status is: DISABLED. /help
-    ```
+    > Success! The new status is: DISABLED. /help
 
 - Download:
   - Go to the [download page](https://plugins.glpi-project.org/#/plugin/telegrambot) and get the latest version (3.0) of our plugin.
@@ -127,17 +115,60 @@ Here is a step by step of the video above:
   - After the installation click on the Enable icon.
   - If your plugin installation didn't work, we have to make some workarounds:
   ```
-  Unfortunately we have to make some changes on GLPI 9.4.x core to Telegrambot work properly:
-  Attention: If all your Plugins folder name starts with lowercase letter, this modification has no impact at all on your GLPI Aplication.
-  Go to file: /glpi/inc/plugin.class.php
-  Plugin::load() line 161 code added: $name = strtolower($name);
+  **Unfortunately we have to make some changes on GLPI 9.4.x core to Telegrambot work properly:**
+  **Attention:** If all your Plugins folder name starts with lowercase letter, this modification has no impact at all on your GLPI Aplication.
+  Go to file: **/glpi/inc/plugin.class.php**
 
-  Plugin::loadLang() line 193 code added: $name = strtolower($name);
+  Plugin::load(){
+    static function load($name, $withhook = false) {
+      global $LOADED_PLUGINS;
+      **$name = strtolower($name); //-> Add this line**
+      ...
 
-  Plugin::doHook() line 1105 code added: $plug = strtolower($plug);
-  Plugin::doHook() line 1124 code added: $plug = strtolower($plug);
+  } line 161 (GLPI 9.4.2)
 
-  Plugin::doHookFunction() line 1158 code added: $plug = strtolower($plug);
+  Plugin::loadLang(){
+    static function loadLang($name, $forcelang = '', $coretrytoload = '') {
+        // $LANG needed : used when include lang file
+        global $CFG_GLPI, $LANG, $TRANSLATE;
+        **$name = strtolower($name); //-> Add this line**
+
+  } line 193 (GLPI 9.4.2)
+
+  Plugin::doHook(){
+    static function doHook ($name, $param = null) {
+    ...
+    if (isset($PLUGIN_HOOKS[$name]) && is_array($PLUGIN_HOOKS[$name])) {
+            foreach ($PLUGIN_HOOKS[$name] as $plug => $tab) {
+               **$plug = strtolower($plug); //-> Add this line**
+               if (!Plugin::isPluginLoaded($plug)) {
+                  continue;
+               }
+    ...
+    } else { // Standard hook call
+         if (isset($PLUGIN_HOOKS[$name]) && is_array($PLUGIN_HOOKS[$name])) {
+            foreach ($PLUGIN_HOOKS[$name] as $plug => $function) {
+               **$plug = strtolower($plug); //-> Add this line**
+               if (!Plugin::isPluginLoaded($plug)) {
+                  continue;
+               }
+    
+  } line 1105 and 1124 (GLPI 9.4.2)
+
+  Plugin::doHookFunction(){
+    static function doHookFunction($name, $parm = null) {
+      global $PLUGIN_HOOKS;
+
+      $ret = $parm;
+      if (isset($PLUGIN_HOOKS[$name]) && is_array($PLUGIN_HOOKS[$name])) {
+         foreach ($PLUGIN_HOOKS[$name] as $plug => $function) {
+            **$plug = strtolower($plug); //-> Add this line**
+            if (!Plugin::isPluginLoaded($plug)) {
+               continue;
+            }
+
+
+  } line 1158 (GLPI 9.4.2)
   ```
 
 - Setup the Notifications:
