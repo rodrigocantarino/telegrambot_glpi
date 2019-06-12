@@ -1,0 +1,1 @@
+../glpi-project/tools/tools/extract_template.sh
