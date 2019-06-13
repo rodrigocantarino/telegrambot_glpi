@@ -114,61 +114,70 @@ Here is a step by step of the video above:
   - On the column Action, click on the Install icon.
   - After the installation click on the Enable icon.
   - If your plugin installation didn't work, we have to make some workarounds:
-  ```
   **Unfortunately we have to make some changes on GLPI 9.4.x core to Telegrambot work properly:**
   **Attention:** If all your Plugins folder name starts with lowercase letter, this modification has no impact at all on your GLPI Aplication.
   Go to file: **/glpi/inc/plugin.class.php**
 
-  Plugin::load(){
+  **Plugin::load() - line 161 (GLPI 9.4.2) **
+  ```php
     static function load($name, $withhook = false) {
       global $LOADED_PLUGINS;
-      **$name = strtolower($name); //-> Add this line**
+      $name = strtolower($name); //-> Add this line
       ...
+    } 
+  ```
 
-  } line 161 (GLPI 9.4.2)
-
-  Plugin::loadLang(){
+  **Plugin::loadLang() - line 193 (GLPI 9.4.2) **
+  ```php
     static function loadLang($name, $forcelang = '', $coretrytoload = '') {
         // $LANG needed : used when include lang file
         global $CFG_GLPI, $LANG, $TRANSLATE;
-        **$name = strtolower($name); //-> Add this line**
+        $name = strtolower($name); //-> Add this line
+        ...
+    } 
+  ```
 
-  } line 193 (GLPI 9.4.2)
-
-  Plugin::doHook(){
+  **Plugin::doHook() - line 1105 and 1124 (GLPI 9.4.2)**
+  ```php
     static function doHook ($name, $param = null) {
-    ...
-    if (isset($PLUGIN_HOOKS[$name]) && is_array($PLUGIN_HOOKS[$name])) {
-            foreach ($PLUGIN_HOOKS[$name] as $plug => $tab) {
-               **$plug = strtolower($plug); //-> Add this line**
-               if (!Plugin::isPluginLoaded($plug)) {
-                  continue;
+        ...
+        if (isset($PLUGIN_HOOKS[$name]) && is_array($PLUGIN_HOOKS[$name])) {
+                foreach ($PLUGIN_HOOKS[$name] as $plug => $tab) {
+                   $plug = strtolower($plug); //-> Add this line
+                   if (!Plugin::isPluginLoaded($plug)) {
+                      continue;
+                   }
+        ...
+        } else { // Standard hook call
+            if (isset($PLUGIN_HOOKS[$name]) && is_array($PLUGIN_HOOKS[$name])) {
+               foreach ($PLUGIN_HOOKS[$name] as $plug => $function) {
+                  $plug = strtolower($plug); //-> Add this line
+                  if (!Plugin::isPluginLoaded($plug)) {
+                     continue;
+                  }
+                  ...
                }
-    ...
-    } else { // Standard hook call
-         if (isset($PLUGIN_HOOKS[$name]) && is_array($PLUGIN_HOOKS[$name])) {
-            foreach ($PLUGIN_HOOKS[$name] as $plug => $function) {
-               **$plug = strtolower($plug); //-> Add this line**
-               if (!Plugin::isPluginLoaded($plug)) {
-                  continue;
-               }
-    
-  } line 1105 and 1124 (GLPI 9.4.2)
+               ...
+            }
+            ...
+        }
+        ...
+    }
+  ``` 
 
-  Plugin::doHookFunction(){
+  **Plugin::doHookFunction() - line 1158 (GLPI 9.4.2)**
+  ```php
     static function doHookFunction($name, $parm = null) {
       global $PLUGIN_HOOKS;
 
       $ret = $parm;
       if (isset($PLUGIN_HOOKS[$name]) && is_array($PLUGIN_HOOKS[$name])) {
          foreach ($PLUGIN_HOOKS[$name] as $plug => $function) {
-            **$plug = strtolower($plug); //-> Add this line**
+            $plug = strtolower($plug); //-> Add this line
             if (!Plugin::isPluginLoaded($plug)) {
                continue;
             }
-
-
-  } line 1158 (GLPI 9.4.2)
+    } 
   ```
 
 - Setup the Notifications:
