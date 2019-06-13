@@ -144,24 +144,12 @@ Here is a step by step of the video above:
         if (isset($PLUGIN_HOOKS[$name]) && is_array($PLUGIN_HOOKS[$name])) {
                 foreach ($PLUGIN_HOOKS[$name] as $plug => $tab) {
                    $plug = strtolower($plug); //-> Add this line
-                   if (!Plugin::isPluginLoaded($plug)) {
-                      continue;
-                   }
-        ...
+                   ...
         } else { // Standard hook call
             if (isset($PLUGIN_HOOKS[$name]) && is_array($PLUGIN_HOOKS[$name])) {
                foreach ($PLUGIN_HOOKS[$name] as $plug => $function) {
                   $plug = strtolower($plug); //-> Add this line
-                  if (!Plugin::isPluginLoaded($plug)) {
-                     continue;
-                  }
                   ...
-               }
-               ...
-            }
-            ...
-        }
-        ...
     }
   ``` 
 
@@ -174,9 +162,7 @@ Here is a step by step of the video above:
       if (isset($PLUGIN_HOOKS[$name]) && is_array($PLUGIN_HOOKS[$name])) {
          foreach ($PLUGIN_HOOKS[$name] as $plug => $function) {
             $plug = strtolower($plug); //-> Add this line
-            if (!Plugin::isPluginLoaded($plug)) {
-               continue;
-            }
+            ...
     } 
   ```
 
