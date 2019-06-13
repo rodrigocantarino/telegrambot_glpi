@@ -116,9 +116,9 @@ Here is a step by step of the video above:
   - If your plugin installation didn't work, we have to make some workarounds:
   **Unfortunately we have to make some changes on GLPI 9.4.x core to Telegrambot work properly:**
   **Attention:** If all your Plugins folder name starts with lowercase letter, this modification has no impact at all on your GLPI Aplication.
-  Go to file: **/glpi/inc/plugin.class.php**
+  - Go to file: **/glpi/inc/plugin.class.php**
 
-  **Plugin::load() - line 161 (GLPI 9.4.2) **
+  **Plugin::load() - line 161 (GLPI 9.4.2)**
   ```php
     static function load($name, $withhook = false) {
       global $LOADED_PLUGINS;
@@ -127,7 +127,7 @@ Here is a step by step of the video above:
     } 
   ```
 
-  **Plugin::loadLang() - line 193 (GLPI 9.4.2) **
+  **Plugin::loadLang() - line 193 (GLPI 9.4.2)**
   ```php
     static function loadLang($name, $forcelang = '', $coretrytoload = '') {
         // $LANG needed : used when include lang file
